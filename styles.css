@@ -25,8 +25,10 @@ p{margin:0}
 .hint{font-size:14px;color:#5b6b66;margin-top:7px;overflow-wrap:anywhere}
 .required{color:#a23423;font-size:13px;margin-left:6px;white-space:nowrap}
 .options{display:grid;gap:8px;margin-top:8px}
-.options label{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;min-height:48px;padding:12px;border:1px solid #dbe5e1;border-radius:8px;background:#fbfdfc;transition:border-color .15s,background .15s,box-shadow .15s;overflow-wrap:anywhere}
-.options label:hover{border-color:#8db8ac;background:#f4faf8}
+.options label,.option-choice{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;min-height:48px;padding:12px;border:1px solid #dbe5e1;border-radius:8px;background:#fbfdfc;transition:border-color .15s,background .15s,box-shadow .15s;overflow-wrap:anywhere}
+.options label:hover,.option-choice:hover{border-color:#8db8ac;background:#f4faf8}
+.option-block{display:grid;gap:8px}
+.option-block .extra-field{margin:0 0 0 30px}
 .options input[type=radio],.options input[type=checkbox]{width:18px;height:18px;min-height:auto;margin-top:3px;accent-color:#216b61}
 .other-input{grid-column:2;width:100%;margin-top:4px}
 .extra-field{margin:14px 0 0;padding:15px;background:#eef6f3;border:1px solid #c8dbd5;border-radius:8px}
@@ -45,7 +47,8 @@ button:disabled{opacity:.62;cursor:not-allowed}
 .download-panel{display:none;background:#e2eee9;border:1px solid #cadbd5;border-radius:8px;padding:18px;margin-top:22px}
 .toast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));width:min(calc(100vw - 24px),520px);transform:translateX(-50%);background:#17221f;color:white;padding:12px 16px;border-radius:8px;box-shadow:0 8px 24px #0003;z-index:20}
 .rtl{direction:rtl}
-.rtl .options label{grid-template-columns:minmax(0,1fr) auto}
+.rtl .options label,.rtl .option-choice{grid-template-columns:minmax(0,1fr) auto}
+.rtl .option-block .extra-field{margin:0 30px 0 0}
 .rtl .other-input{grid-column:1}
 .is-landing .top{grid-template-columns:1fr}
 .is-landing .top .controls,.is-landing .progress,.is-landing .download-panel{display:none}

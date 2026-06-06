@@ -404,6 +404,63 @@ function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','
 function idSafe(id){ return id.replace(/[^a-zA-Z0-9_-]/g, "_"); }
 function allItems(){ return B.survey.sections.flatMap(sec => sec.items); }
 function itemById(id){ return allItems().find(item => item.id === id); }
+const heatedTobaccoUseOptions = {
+  "ko": {
+    "매일 피운다": "매일 사용한다",
+    "가끔 피운다": "가끔 사용한다",
+    "과거에는 피웠으나 현재 피우지 않는다": "과거에는 사용했으나 현재 사용하지 않는다"
+  },
+  "en": {
+    "매일 피운다": "I use it every day",
+    "가끔 피운다": "I use it occasionally",
+    "과거에는 피웠으나 현재 피우지 않는다": "I used it in the past, but I do not use it now"
+  },
+  "ru": {
+    "매일 피운다": "Я использую это каждый день",
+    "가끔 피운다": "Я использую это время от времени",
+    "과거에는 피웠으나 현재 피우지 않는다": "Я использовал(а) это раньше, но сейчас не использую"
+  },
+  "kk": {
+    "매일 피운다": "Мен оны күн сайын қолданамын",
+    "가끔 피운다": "Мен оны кейде қолданамын",
+    "과거에는 피웠으나 현재 피우지 않는다": "Бұрын қолданғанмын, бірақ қазір қолданбаймын"
+  },
+  "mn": {
+    "매일 피운다": "Би үүнийг өдөр бүр хэрэглэдэг",
+    "가끔 피운다": "Би үүнийг хааяа хэрэглэдэг",
+    "과거에는 피웠으나 현재 피우지 않는다": "Би өмнө нь хэрэглэдэг байсан, одоо хэрэглэхгүй"
+  },
+  "zh-CN": {
+    "매일 피운다": "我每天使用",
+    "가끔 피운다": "我偶尔使用",
+    "과거에는 피웠으나 현재 피우지 않는다": "我以前使用过，但现在不使用"
+  },
+  "uz": {
+    "매일 피운다": "Men undan har kuni foydalanaman",
+    "가끔 피운다": "Men undan vaqti-vaqti bilan foydalanaman",
+    "과거에는 피웠으나 현재 피우지 않는다": "Men ilgari undan foydalanganman, hozir foydalanmayman"
+  },
+  "ne": {
+    "매일 피운다": "म यसलाई हरेक दिन प्रयोग गर्छु",
+    "가끔 피운다": "म यसलाई कहिलेकाहीँ प्रयोग गर्छु",
+    "과거에는 피웠으나 현재 피우지 않는다": "मैले पहिले प्रयोग गर्थेँ, तर अहिले प्रयोग गर्दिनँ"
+  },
+  "bn": {
+    "매일 피운다": "আমি এটি প্রতিদিন ব্যবহার করি",
+    "가끔 피운다": "আমি এটি মাঝে মাঝে ব্যবহার করি",
+    "과거에는 피웠으나 현재 피우지 않는다": "আমি আগে এটি ব্যবহার করতাম, কিন্তু এখন ব্যবহার করি না"
+  },
+  "si": {
+    "매일 피운다": "මම එය දිනපතා භාවිතා කරමි",
+    "가끔 피운다": "මම එය ඉඳහිට භාවිතා කරමි",
+    "과거에는 피웠으나 현재 피우지 않는다": "මම පෙර එය භාවිතා කළෙමි, නමුත් දැන් භාවිතා නොකරමි"
+  },
+  "ur": {
+    "매일 피운다": "میں اسے ہر روز استعمال کرتا/کرتی ہوں",
+    "가끔 피운다": "میں اسے کبھی کبھار استعمال کرتا/کرتی ہوں",
+    "과거에는 피웠으나 현재 피우지 않는다": "میں نے اسے پہلے استعمال کیا تھا، لیکن اب استعمال نہیں کرتا/کرتی"
+  }
+};
 function displayId(id){
   return String(id)
     .replace(/^basic_/, "")
@@ -416,6 +473,10 @@ function displayId(id){
     .replace(/_/g, "-");
 }
 function optionText(item, opt){
+  if(item.id === "smoking_E_3_1"){
+    const langOptions = heatedTobaccoUseOptions[lang] || heatedTobaccoUseOptions.en;
+    if(langOptions && langOptions[opt]) return langOptions[opt];
+  }
   let group = null;
   if(item.id.startsWith("pss_")) group = "pss";
   else if(item.id.startsWith("assis_")) group = "assis";
@@ -463,6 +524,22 @@ function numberAttributes(source, extra = ""){
   const max = source.max !== undefined ? ` max="${esc(source.max)}"` : "";
   const step = source.step !== undefined ? ` step="${esc(source.step)}"` : "";
   return `type="number" inputmode="numeric" data-number-bounds="1"${extra}${min}${max}${step}`;
+}
+const zeroMinuteCopy = {
+  ko: "분이 0분인 경우에도 분 칸에 0을 입력해 주세요.",
+  en: "If the minutes are 0, enter 0 in the minutes field.",
+  ru: "Если минут 0, введите 0 в поле минут.",
+  kk: "Минут 0 болса да, минут өрісіне 0 енгізіңіз.",
+  mn: "Минут 0 байсан ч минутын талбарт 0 гэж оруулна уу.",
+  "zh-CN": "如果分钟为0，也请在分钟栏输入0。",
+  uz: "Daqiqa 0 bo'lsa ham, daqiqa maydoniga 0 kiriting.",
+  ne: "मिनेट ० भए पनि मिनेटको खाली ठाउँमा ० लेख्नुहोस्।",
+  bn: "মিনিট ০ হলে মিনিটের ঘরেও ০ লিখুন।",
+  si: "විනාඩි 0ක් නම්, විනාඩි කොටුවට 0 ඇතුළත් කරන්න.",
+  ur: "اگر منٹ 0 ہوں تو منٹ کے خانے میں بھی 0 درج کریں۔"
+};
+function zeroMinuteNote(){
+  return zeroMinuteCopy[lang] || zeroMinuteCopy.en;
 }
 const validationCopy = {
   ko: {
@@ -726,7 +803,9 @@ function handleLiveValidation(event, mode = "input"){
   });
 }
 function renderParts(item){
-  return `<div class="parts-grid parts-${(item.parts || []).length}">` + (item.parts || []).map(part => {
+  const parts = item.parts || [];
+  const hasMinuteField = parts.some(part => String(part.id || "").toLowerCase().includes("minute"));
+  const grid = `<div class="parts-grid parts-${parts.length}">` + parts.map(part => {
     const name = idSafe(part.id);
     const fieldClass = part.type === "select" ? "part-select" : "part-number";
     const label = `<label class="part-field ${fieldClass}"><span>${esc(t(part.label))}</span>`;
@@ -735,6 +814,7 @@ function renderParts(item){
     }
     return label + `<input name="${esc(name)}" ${numberAttributes(part, ' data-time-part="1"')}></label>`;
   }).join("") + `</div>`;
+  return grid + (hasMinuteField ? `<div class="hint minute-zero-note">${esc(zeroMinuteNote())}</div>` : "");
 }
 
 function isFrequencyDetailItem(item){
@@ -814,7 +894,11 @@ function renderItem(item){
     field = `<div class="options">` + item.options.map((opt, i) => {
       const isOther = opt.includes("기타");
       const otherInput = isOther ? `<input class="other-input" name="${esc(name)}__other" type="text" placeholder="${esc(ui("otherInput"))}" disabled>` : "";
-      return `<label><input type="radio" name="${esc(name)}" value="${esc(opt)}" data-other="${isOther ? "1" : "0"}"> <span>${esc(displayOptionText(item, opt))}</span>${otherInput}</label>`;
+      const optionExtras = (item.extraFields || [])
+        .filter(extraField => extraField.showIfValueContains === opt)
+        .map(extraField => renderExtraField(item, extraField))
+        .join("");
+      return `<div class="option-block"><label class="option-choice"><input type="radio" name="${esc(name)}" value="${esc(opt)}" data-other="${isOther ? "1" : "0"}"> <span>${esc(displayOptionText(item, opt))}</span>${otherInput}</label>${optionExtras}</div>`;
     }).join("") + `</div>`;
   } else if(isFrequencyDetailItem(item)){
     field = renderFrequencyDetail(item, name);
@@ -830,7 +914,7 @@ function renderItem(item){
     field = `<input name="${esc(name)}" type="text" placeholder="${esc(ui("textPlaceholder"))}">`;
   }
   const hint = item.responseHint && item.type !== "radio" && !isFrequencyDetailItem(item) ? `<div class="hint">${esc(t(item.responseHint))}</div>` : "";
-  const extra = (item.extraFields || []).map(extraField => renderExtraField(item, extraField)).join("");
+  const extra = item.type === "radio" ? "" : (item.extraFields || []).map(extraField => renderExtraField(item, extraField)).join("");
   return `<div class="item" data-qid="${esc(item.id)}" data-required-base="${item.required ? "1" : "0"}"><div class="item-label"><span class="qid">${esc(displayId(item.id))}</span><span>${esc(t(item.label))}${required}</span></div>${field}${hint}${extra}<div class="skip-note">${esc(ui("disabledByLogic"))}</div></div>`;
 }
 
@@ -841,6 +925,16 @@ function renderExtraField(parentItem, extraField){
     return `<div class="extra-field" data-extra-id="${esc(extraField.id)}" data-parent-id="${esc(parentItem.id)}" data-show-if="${esc(extraField.showIfValueContains || "")}">
       <div class="item-label">${esc(t(extraField.label))}${required}</div>
       <div class="options">${extraField.options.map(opt => `<label><input type="radio" name="${esc(name)}" value="${esc(opt)}"> <span>${esc(displayOptionText(parentItem, opt))}</span></label>`).join("")}</div>
+    </div>`;
+  }
+  if(extraField.type === "number"){
+    const min = extraField.min ?? "";
+    const max = extraField.max ?? "";
+    const step = extraField.step ?? 1;
+    const bounds = min !== "" || max !== "" ? ` data-number-bounds="1"` : "";
+    return `<div class="extra-field" data-extra-id="${esc(extraField.id)}" data-parent-id="${esc(parentItem.id)}" data-show-if="${esc(extraField.showIfValueContains || "")}">
+      <label class="item-label">${esc(t(extraField.label))}${required}</label>
+      <input type="number" name="${esc(name)}" min="${esc(min)}" max="${esc(max)}" step="${esc(step)}"${bounds}>
     </div>`;
   }
   return `<div class="extra-field" data-extra-id="${esc(extraField.id)}" data-parent-id="${esc(parentItem.id)}" data-show-if="${esc(extraField.showIfValueContains || "")}">
@@ -1087,8 +1181,9 @@ function applyOtherInputs(){
 function applyFrequencyDetailInputs(){
   document.querySelectorAll("[data-frequency-detail-for]").forEach(field => {
     const itemId = field.dataset.frequencyDetailFor;
+    const item = itemById(itemId);
     const selected = document.querySelector(`[name="${CSS.escape(idSafe(itemId))}"]:checked`);
-    const shouldRequire = selected && !selected.value.includes("지난 한달 동안 없었다") && !field.disabled;
+    const shouldRequire = item && item.required && selected && !selected.value.includes("지난 한달 동안 없었다") && !field.disabled;
     field.required = !!shouldRequire;
     if(shouldRequire) validateCustomRequiredField(field);
     else {
