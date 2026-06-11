@@ -1,7 +1,7 @@
 const B = window.SURVEY_BUNDLE;
 const CONFIG = window.SURVEY_CONFIG || {};
 const STORAGE_KEY = "daejin_multilingual_health_survey_responses_v2";
-const ADMIN_PREVIEW = new URLSearchParams(window.location.search).has("admin");
+const ADMIN_PREVIEW = new URLSearchParams(window.location.search).has("admin") || window.location.hash.includes("admin=1");
 let lang = localStorage.getItem("survey_lang") || "ko";
 let surveyStarted = false;
 let pendingResponseId = null;
