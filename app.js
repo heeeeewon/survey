@@ -1,6 +1,7 @@
 const B = window.SURVEY_BUNDLE;
 const CONFIG = window.SURVEY_CONFIG || {};
 const STORAGE_KEY = "daejin_multilingual_health_survey_responses_v2";
+const ADMIN_PREVIEW = new URLSearchParams(window.location.search).has("admin");
 let lang = localStorage.getItem("survey_lang") || "ko";
 let surveyStarted = false;
 let pendingResponseId = null;
@@ -1077,7 +1078,7 @@ function firstInvalidPage(){
   return -1;
 }
 function goToPage(pageIndex){
-  if(pageIndex > currentPage && !validatePage(currentPage)) return;
+  if(pageIndex > currentPage && !ADMIN_PREVIEW && !validatePage(currentPage)) return;
   clearPageError();
   const total = surveyPageCount();
   currentPage = Math.max(0, Math.min(pageIndex, total - 1));
