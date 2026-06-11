@@ -1132,6 +1132,8 @@ function fieldValue(itemId){
 
 function conditionMet(condition){
   if(!condition) return true;
+  if(Array.isArray(condition.all)) return condition.all.every(conditionMet);
+  if(Array.isArray(condition.any)) return condition.any.some(conditionMet);
   const value = fieldValue(condition.id);
   if(condition.contains && !value.includes(condition.contains)) return false;
   if(condition.notContains && (!value || value.includes(condition.notContains))) return false;
