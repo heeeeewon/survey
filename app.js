@@ -464,6 +464,10 @@ const heatedTobaccoUseOptions = {
 function displayId(id){
   return String(id)
     .replace(/^basic_/, "")
+    .replace(/^life_/, "")
+    .replace(/^smart_/, "")
+    .replace(/^alcohol_/, "")
+    .replace(/^physical_/, "")
     .replace(/^sleep_/, "")
     .replace(/^pss_/, "")
     .replace(/^assis_/, "")
